@@ -1,5 +1,13 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import Stats from 'stats.js'
+
+/**
+ * Stats
+ */
+const stats = new Stats()
+stats.showPanel(0)
+document.body.appendChild(stats.dom)
 
 /**
  * Base
@@ -20,30 +28,34 @@ const displacementTexture = textureLoader.load('/textures/displacementMap.png')
  * Sizes
  */
 const sizes = {
-    width: window.innerWidth,
-    height: window.innerHeight
+  width: window.innerWidth,
+  height: window.innerHeight,
 }
 
-window.addEventListener('resize', () =>
-{
-    // Update sizes
-    sizes.width = window.innerWidth
-    sizes.height = window.innerHeight
+window.addEventListener('resize', () => {
+  // Update sizes
+  sizes.width = window.innerWidth
+  sizes.height = window.innerHeight
 
-    // Update camera
-    camera.aspect = sizes.width / sizes.height
-    camera.updateProjectionMatrix()
+  // Update camera
+  camera.aspect = sizes.width / sizes.height
+  camera.updateProjectionMatrix()
 
-    // Update renderer
-    renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  // Update renderer
+  renderer.setSize(sizes.width, sizes.height)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
 /**
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+const camera = new THREE.PerspectiveCamera(
+  75,
+  sizes.width / sizes.height,
+  0.1,
+  100
+)
 camera.position.set(2, 2, 6)
 scene.add(camera)
 
@@ -55,9 +67,9 @@ controls.enableDamping = true
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    powerPreference: 'high-performance',
-    antialias: true
+  canvas: canvas,
+  powerPreference: 'high-performance',
+  antialias: true,
 })
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
@@ -68,25 +80,25 @@ renderer.setPixelRatio(window.devicePixelRatio)
  * Test meshes
  */
 const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(2, 2, 2),
-    new THREE.MeshStandardMaterial()
+  new THREE.BoxGeometry(2, 2, 2),
+  new THREE.MeshStandardMaterial()
 )
 cube.castShadow = true
 cube.receiveShadow = true
-cube.position.set(- 5, 0, 0)
+cube.position.set(-5, 0, 0)
 scene.add(cube)
 
 const torusKnot = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(1, 0.4, 128, 32),
-    new THREE.MeshStandardMaterial()
+  new THREE.TorusKnotGeometry(1, 0.4, 128, 32),
+  new THREE.MeshStandardMaterial()
 )
 torusKnot.castShadow = true
 torusKnot.receiveShadow = true
 scene.add(torusKnot)
 
 const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 32, 32),
-    new THREE.MeshStandardMaterial()
+  new THREE.SphereGeometry(1, 32, 32),
+  new THREE.MeshStandardMaterial()
 )
 sphere.position.set(5, 0, 0)
 sphere.castShadow = true
@@ -94,11 +106,11 @@ sphere.receiveShadow = true
 scene.add(sphere)
 
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(10, 10),
-    new THREE.MeshStandardMaterial()
+  new THREE.PlaneGeometry(10, 10),
+  new THREE.MeshStandardMaterial()
 )
-floor.position.set(0, - 2, 0)
-floor.rotation.x = - Math.PI * 0.5
+floor.position.set(0, -2, 0)
+floor.rotation.x = -Math.PI * 0.5
 floor.castShadow = true
 floor.receiveShadow = true
 scene.add(floor)
@@ -119,21 +131,24 @@ scene.add(directionalLight)
  */
 const clock = new THREE.Clock()
 
-const tick = () =>
-{
-    const elapsedTime = clock.getElapsedTime()
+const tick = () => {
+  stats.begin()
 
-    // Update test mesh
-    torusKnot.rotation.y = elapsedTime * 0.1
+  const elapsedTime = clock.getElapsedTime()
 
-    // Update controls
-    controls.update()
+  // Update test mesh
+  torusKnot.rotation.y = elapsedTime * 0.1
 
-    // Render
-    renderer.render(scene, camera)
+  // Update controls
+  controls.update()
 
-    // Call tick again on the next frame
-    window.requestAnimationFrame(tick)
+  // Render
+  renderer.render(scene, camera)
+
+  // Call tick again on the next frame
+  window.requestAnimationFrame(tick)
+
+  stats.end()
 }
 
 tick()
@@ -184,7 +199,7 @@ tick()
 //     const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
 
 //     const material = new THREE.MeshNormalMaterial()
-    
+
 //     const mesh = new THREE.Mesh(geometry, material)
 //     mesh.position.x = (Math.random() - 0.5) * 10
 //     mesh.position.y = (Math.random() - 0.5) * 10
@@ -201,7 +216,7 @@ tick()
 //     const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
 
 //     const material = new THREE.MeshNormalMaterial()
-    
+
 //     const mesh = new THREE.Mesh(geometry, material)
 //     mesh.position.x = (Math.random() - 0.5) * 10
 //     mesh.position.y = (Math.random() - 0.5) * 10
@@ -214,7 +229,7 @@ tick()
 
 // // Tip 20
 // const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-    
+
 // for(let i = 0; i < 50; i++)
 // {
 //     const material = new THREE.MeshNormalMaterial()
@@ -233,7 +248,7 @@ tick()
 // const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
 
 // const material = new THREE.MeshNormalMaterial()
-    
+
 // for(let i = 0; i < 50; i++)
 // {
 //     const mesh = new THREE.Mesh(geometry, material)
